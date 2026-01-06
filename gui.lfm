@@ -1,0 +1,82 @@
+object Form1: TForm1
+  Left = 463
+  Height = 507
+  Top = 32
+  Width = 634
+  Caption = 'Copy Char Settings'
+  ClientHeight = 507
+  ClientWidth = 634
+  DesignTimePPI = 120
+  Font.Height = -15
+  Menu = MainMenu1
+  OnShow = FormShow
+  object ListBox1: TListBox
+    Left = 8
+    Height = 448
+    Top = 48
+    Width = 306
+    ItemHeight = 0
+    TabOrder = 0
+  end
+  object ListBox2: TListBox
+    Left = 318
+    Height = 448
+    Top = 48
+    Width = 306
+    ItemHeight = 0
+    TabOrder = 1
+  end
+  object Label1: TLabel
+    Left = 112
+    Height = 28
+    Top = 16
+    Width = 50
+    Caption = 'From:'
+    Font.Height = -20
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 448
+    Height = 28
+    Top = 16
+    Width = 24
+    Caption = 'To:'
+    Font.Height = -20
+    ParentFont = False
+  end
+  object Button1: TButton
+    Left = 264
+    Height = 34
+    Top = 8
+    Width = 94
+    Caption = 'Copy'
+    Font.Height = -20
+    ParentFont = False
+    TabOrder = 2
+  end
+  object MainMenu1: TMainMenu
+    Left = 8
+    object MenuItem1: TMenuItem
+      Caption = 'File'
+      object MenuItem2: TMenuItem
+        Caption = 'Quit'
+      end
+    end
+    object MenuItem3: TMenuItem
+      Caption = 'Settings'
+      object MenuItem4: TMenuItem
+        Caption = 'Wow folder...'
+        OnClick = MenuItem4Click
+      end
+    end
+    object MenuItem5: TMenuItem
+      Caption = 'Help'
+      object MenuItem6: TMenuItem
+        Caption = 'About'
+      end
+      object MenuItem7: TMenuItem
+        Caption = 'Manual'
+      end
+    end
+  end
+end

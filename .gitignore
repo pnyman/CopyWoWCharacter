@@ -1,0 +1,58 @@
+# Kompilerade filer
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.ppu
+*.a
+*.pdb
+
+# Backupfiler och temporära filer
+*.bak
+*.old
+*.log
+*.tmp
+*.~*
+
+# Projektfiler som genereras av Lazarus
+*.compiled
+*.compiled~
+*.rst
+*.rsj
+*.map
+*.dbg
+*.or
+*.lps
+*.ico
+*.res
+
+# Konfigurationsfiler och sessionsdata
+backup/
+lib/
+bin/
+*.lpi.bak
+*.lps.bak
+
+# IDE-filer som är specifika för utvecklaren
+*.session
+*.local
+*.compiled
+.environmentoptions
+
+# Skapade mappar
+backup/
+lib/
+bin/
+output/
+dist/
+
+# MacOS-specifika filer
+.DS_Store
+*.app
+
+# Windows-specifika filer
+Thumbs.db
+
+# Övrigt
+TAGS
