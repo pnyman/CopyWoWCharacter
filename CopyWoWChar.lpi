@@ -46,6 +46,16 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Settings"/>
       </Unit>
+      <Unit>
+        <Filename Value="chardata.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CharData"/>
+      </Unit>
+      <Unit>
+        <Filename Value="copyfiles.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CopyFiles"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
