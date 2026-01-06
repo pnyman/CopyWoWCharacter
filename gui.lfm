@@ -45,11 +45,12 @@ object Form1: TForm1
     ParentFont = False
   end
   object Button1: TButton
-    Left = 264
-    Height = 34
+    Left = 280
+    Height = 38
     Top = 8
-    Width = 94
+    Width = 72
     Caption = 'Copy'
+    Color = clBtnFace
     Font.Height = -20
     ParentFont = False
     TabOrder = 2
