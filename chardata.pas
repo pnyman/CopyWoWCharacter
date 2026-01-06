@@ -70,62 +70,51 @@ begin
 
   // Accounts
   if FindFirst(ConcatPaths([WTF, '*']), faDirectory, info) = 0 then
-    begin
-      Repeat
-        With info do
+    Repeat
+      With info do
+        if IsValidDir(info) then
           begin
-            if IsValidDir(info) then
-              begin
-                account.path := ConcatPaths([WTF, name]);
-                account.name := name;
-                SetLength(accounts, Length(accounts) + 1);
-                accounts[High(accounts)] := account;
-              end;
+            account.path := ConcatPaths([WTF, name]);
+            account.name := name;
+            SetLength(accounts, Length(accounts) + 1);
+            accounts[High(accounts)] := account;
           end;
-      Until FindNext(info) <> 0;
-      FindClose(info);
-    end;
+    Until FindNext(info) <> 0;
+  FindClose(info);
 
   // Realms
   for account in accounts do
     if FindFirst(ConcatPaths([account.path, '*']), faDirectory, info) = 0 then
-      begin
-        Repeat
-          With info do
+      Repeat
+        With info do
+          if IsValidDir(info) then
             begin
-              if IsValidDir(info) then
-                begin
-                  realm.account := account;
-                  realm.path := ConcatPaths([account.path, name]);
-                  realm.name := name;
-                  SetLength(realms, Length(realms) + 1);
-                  realms[High(realms)] := realm;
-                end;
+              realm.account := account;
+              realm.path := ConcatPaths([account.path, name]);
+              realm.name := name;
+              SetLength(realms, Length(realms) + 1);
+              realms[High(realms)] := realm;
             end;
-        Until FindNext(info) <> 0;
-        FindClose(info);
-      end;
+      Until FindNext(info) <> 0;
+  FindClose(info);
 
   // Characters
   for realm in realms do
     if FindFirst(ConcatPaths([realm.path, '*']), faDirectory, info) = 0 then
-      begin
-        Repeat
-          With info do
+      Repeat
+        With info do
+          if IsValidDir(info) then
             begin
-              if IsValidDir(info) then
-                begin
-                  AddWoWCharacter(result,
-                                  server, realm.account.name, realm.name,
-                                  ConcatPaths([realm.path, name]));
-                end;
+              AddWoWCharacter(result,
+                              server, realm.account.name, realm.name,
+                              ConcatPaths([realm.path, name]));
             end;
-        Until FindNext(info) <> 0;
-        FindClose(info);
-      end;
+      Until FindNext(info) <> 0;
+  FindClose(info);
 end;
 
 
+{ For testing }
 procedure PrintWoWCharacters(Const A: TWoWCharArray);
 var
   data: String;
