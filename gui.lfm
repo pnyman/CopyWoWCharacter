@@ -3,7 +3,7 @@ object Form1: TForm1
   Height = 507
   Top = 32
   Width = 634
-  Caption = 'Copy Char Settings'
+  Caption = 'Copy WoW Character'
   ClientHeight = 507
   ClientWidth = 634
   DesignTimePPI = 120

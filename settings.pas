@@ -26,7 +26,7 @@ implementation
 
 function GetAppName: String;
 begin
-  result := 'CopyCharSettings';
+  result := 'CopyWoWChar';
 end;
 
 constructor TSettings.Create;

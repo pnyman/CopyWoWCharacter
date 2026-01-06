@@ -1,4 +1,4 @@
-program charsettings;
+program CopyWoWChar;
 
 {$mode objfpc}{$H+}
 
