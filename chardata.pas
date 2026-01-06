@@ -24,40 +24,37 @@ type
   TAccountArray = Array of TAccount;
   TWoWCharArray = Array of TWoWChar;
 
-procedure FindWoWCharacters(server: String);
-function GetWowChars: TWoWCharArray;
-procedure PrintWoWCharacters;
+function FindWoWCharacters(Const server: String): TWoWCharArray;
+procedure PrintWoWCharacters(Const A: TWoWCharArray);
 
 implementation
 
-var
-  wowchars: TWoWCharArray;
-
-function IsValidDir(test: Boolean; name: String): Boolean;
-var
-  A, B, C, D: Boolean;
+function IsValidDir(Const Info: TRawByteSearchRec): Boolean;
 begin
-  A := name = '.';
-  B := name = '..';
-  C := name = 'SavedVariables';
-  D := name = 'Turtle WoW'; { ad hoc }
-  result := test And Not (A Or B Or C Or D);
+  Result := ((Info.Attr And faDirectory) <> 0) And
+            (Info.Name <> '.') And
+            (Info.Name <> '..') And
+            (Info.Name <> 'SavedVariables') And
+            (Info.Name <> 'Turtle WoW');
 end;
 
-procedure AddWoWCharacter(server, account, realm, name: String);
+
+procedure AddWoWCharacter(Var A: TWoWCharArray;
+                          Const server, account, realm, name: String);
 var
-  wowchar: TWoWChar;
+  C: TWoWChar;
 begin
-  wowchar.server := ExtractFileName(server);
-  wowchar.account := ExtractFileName(account);
-  wowchar.realm := ExtractFileName(realm);
-  wowchar.name := ExtractFileName(name);
-  wowchar.path := name;
-  SetLength(wowchars, Length(wowchars) + 1);
-  wowchars[High(wowchars)] := wowchar;
+  C.server := ExtractFileName(server);
+  C.account := ExtractFileName(account);
+  C.realm := ExtractFileName(realm);
+  C.name := ExtractFileName(name);
+  C.path := name;
+  SetLength(A, Length(A) + 1);
+  A[High(A)] := C;
 end;
 
-procedure FindWoWCharacters(server: String);
+
+function FindWoWCharacters(Const server: String): TWoWCharArray;
 var
   WTF: String;
   info: TRawByteSearchRec;
@@ -66,17 +63,18 @@ var
   realm: TRealm;
   realms: TRealmArray;
 begin
-  WTF := ConcatPaths([server, '/WTF/Account/']);
+  WTF := ConcatPaths([server, 'WTF', 'Account']);
   SetLength(realms, 0);
   SetLength(accounts, 0);
+  SetLength(result, 0);
 
   // Accounts
-  if FindFirst(ConcatPaths([WTF, '*']), faAnyFile, info) = 0 then
+  if FindFirst(ConcatPaths([WTF, '*']), faDirectory, info) = 0 then
     begin
       Repeat
         With info do
           begin
-            if IsValidDir(((attr and faDirectory) = faDirectory), name) then
+            if IsValidDir(info) then
               begin
                 account.path := ConcatPaths([WTF, name]);
                 account.name := name;
@@ -90,12 +88,12 @@ begin
 
   // Realms
   for account in accounts do
-    if FindFirst(ConcatPaths([account.path, '*']), faAnyFile, info) = 0 then
+    if FindFirst(ConcatPaths([account.path, '*']), faDirectory, info) = 0 then
       begin
         Repeat
           With info do
             begin
-              if IsValidDir(((attr and faDirectory) = faDirectory), name) then
+              if IsValidDir(info) then
                 begin
                   realm.account := account;
                   realm.path := ConcatPaths([account.path, name]);
@@ -110,15 +108,16 @@ begin
 
   // Characters
   for realm in realms do
-    if FindFirst(ConcatPaths([realm.path, '*']), faAnyFile, info) = 0 then
+    if FindFirst(ConcatPaths([realm.path, '*']), faDirectory, info) = 0 then
       begin
         Repeat
           With info do
             begin
-              if IsValidDir(((attr and faDirectory) = faDirectory), name) then
+              if IsValidDir(info) then
                 begin
-                  AddWoWCharacter(server, realm.account.name, realm.name, ConcatPaths([realm.path,
-                                  name]));
+                  AddWoWCharacter(result,
+                                  server, realm.account.name, realm.name,
+                                  ConcatPaths([realm.path, name]));
                 end;
             end;
         Until FindNext(info) <> 0;
@@ -126,17 +125,13 @@ begin
       end;
 end;
 
-function GetWowChars: TWoWCharArray;
-begin
-  result := wowchars;
-end;
 
-procedure PrintWoWCharacters;
+procedure PrintWoWCharacters(Const A: TWoWCharArray);
 var
   data: String;
   c: TWoWChar;
 begin
-  for c in wowchars do
+  for c in A do
     begin
       data := format('%s %s %s %s %s', [c.server, c.account, c.realm, c.name, c.path]);
       WriteLn(data);
