@@ -5,7 +5,8 @@ unit CopyFiles;
 interface
 
 Uses
-Classes, SysUtils, CharData;
+Classes, SysUtils, FileUtil, CharData;
+{ add flag -FuC:\lazarus\components\lazutils when testing }
 
 type
   TFilePath = Record
@@ -14,20 +15,10 @@ type
 
   TFilePathsArray = Array of TFilePath;
 
+function CollectFilePaths(Const source, target: TWoWChar): TFilePathsArray;
+function CopySettings(Const source, target: TWoWChar): Boolean;
+
 implementation
-
-procedure AddFilePath(Const ToPath: String;
-                      Const outer, inner: TRawByteSearchRec;
-                      Var A: TFilePathsArray);
-var
-  path: TFilePath;
-begin
-  path.source := inner.name;
-  path.target := ConcatPaths([ToPath, outer.name, inner.name]);
-  SetLength(A, Length(A) + 1);
-  A[High(A)] := path;
-end;
-
 
 function WantItem(Const Info: TRawByteSearchRec): Boolean;
 begin
@@ -37,40 +28,71 @@ begin
 end;
 
 
-{ Not done, doesn't actually copy any files yet! }
-procedure CopySettingsFiles(source, target: TWoWChar);
+procedure AddPath(var A: TFilePathsArray; path: TFilePath);
+begin
+  SetLength(A, Length(A) + 1);
+  A[High(A)] := path;
+end;
+
+
+function CollectFilePaths(Const source, target: TWoWChar): TFilePathsArray;
 var
-  FromPath, ToPath: String;
   OuterInfo, InnerInfo: TRawByteSearchRec;
   OuterPath, InnerPath: String;
+  path: TFilePath;
   A: TFilePathsArray = nil;
 begin
-  FromPath := source.path;
-  ToPath := target.path;
-  OuterPath := ConcatPaths(ConcatPaths([FromPath, '*']));
+  OuterPath := ConcatPaths(ConcatPaths([source.path, '*']));
 
   if FindFirst(OuterPath, faDirectory, OuterInfo) = 0 then
     Repeat
       With OuterInfo do
         begin
+          if not WantItem(OuterInfo) then continue;
+
           // Directory
-          if ((OuterInfo.Attr and faDirectory) = faDirectory) and WantItem(OuterInfo) then
+          if ((OuterInfo.Attr and faDirectory) = faDirectory) then
             begin
-              InnerPath := ConcatPaths([FromPath, OuterInfo.name, '*']);
+              InnerPath := ConcatPaths([source.path, OuterInfo.name, '*']);
               if FindFirst(InnerPath, faDirectory, InnerInfo) = 0 then
                 Repeat
                   With InnerInfo do
                     if WantItem(InnerInfo) then
-                      AddFilePath(ToPath, OuterInfo, InnerInfo, A);
+                      begin
+                        path.source := ConcatPaths([source.path, OuterInfo.name, InnerInfo.name]);
+                        path.target := ConcatPaths([target.path, OuterInfo.name, InnerInfo.name]);
+                        AddPath(A, path);
+                      end;
                 Until FindNext(InnerInfo) <> 0;
+              FindClose(InnerInfo);
             end
+
           else
             // Non-directory
-            if WantItem(OuterInfo) then
-              AddFilePath(ToPath, OuterInfo, InnerInfo, A);
+            begin
+              path.source := ConcatPaths([source.path, OuterInfo.name]);
+              path.target := ConcatPaths([target.path, OuterInfo.name]);
+              AddPath(A, path);
+            end;
         end;
+
     Until FindNext(OuterInfo) <> 0;
   FindClose(OuterInfo);
+  result := A;
+end;
+
+
+function CopySettings(Const source, target: TWoWChar): Boolean;
+var
+  F: TFilePath;
+  ok: Boolean;
+begin
+  for F in CollectFilePaths(source, target) do
+    begin
+      ok := FileUtil.CopyFile(F.source, F.target, [cffOverwriteFile, cffCreateDestDirectory]);
+      if not ok then Exit(false);
+    end;
+  result := true;
 end;
 
 end.
