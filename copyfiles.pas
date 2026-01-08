@@ -20,6 +20,7 @@ function CopySettings(Const source, target: TWoWChar): Boolean;
 
 implementation
 
+{ * WantItem }
 function WantItem(Const Info: TRawByteSearchRec): Boolean;
 begin
   Result := (Info.Name <> '.') And
@@ -27,6 +28,7 @@ begin
             (Info.Name <> 'cache.md5');
 end;
 
+{ * AddPath }
 procedure AddPath(Var A: TFilePathsArray; Const source, target: Array Of String);
 var
   path: TFilePath;
@@ -37,6 +39,7 @@ begin
   A[High(A)] := path;
 end;
 
+{ * CollectFilePaths }
 function CollectFilePaths(Const source, target: TWoWChar): TFilePathsArray;
 var
   info1, info2: TRawByteSearchRec;
@@ -46,36 +49,32 @@ begin
   OuterPath := ConcatPaths(ConcatPaths([source.path, '*']));
 
   if FindFirst(OuterPath, faDirectory, info1) = 0 then
-    Repeat
+  Repeat
+    begin
+      if not WantItem(info1) then continue;
+
+      // Directory
+      if ((info1.Attr and faDirectory) = faDirectory) then
       begin
-        if not WantItem(info1) then continue;
+        InnerPath := ConcatPaths([source.path, info1.name, '*']);
+        if FindFirst(InnerPath, faDirectory, info2) = 0 then
+        Repeat
+          if WantItem(info2) then
+          AddPath(A, [source.path, info1.name, info2.name], [target.path, info1.name, info2.name]);
+        Until FindNext(info2) <> 0;
+        FindClose(info2);
+      end
 
-        // Directory
-        if ((info1.Attr and faDirectory) = faDirectory) then
-          begin
-            InnerPath := ConcatPaths([source.path, info1.name, '*']);
-            if FindFirst(InnerPath, faDirectory, info2) = 0 then
-              Repeat
-                if WantItem(info2) then
-                  AddPath(A,
-                          [source.path, info1.name, info2.name],
-                          [target.path, info1.name, info2.name]);
-              Until FindNext(info2) <> 0;
-            FindClose(info2);
-          end
+      // Non-directory
+      else AddPath(A, [source.path, info1.name], [target.path, info1.name]);
+    end;
 
-        else
-          // Non-directory
-          begin
-            AddPath(A, [source.path, info1.name], [target.path, info1.name]);
-          end;
-      end;
-
-    Until FindNext(info1) <> 0;
+  Until FindNext(info1) <> 0;
   FindClose(info1);
   result := A;
 end;
 
+{ * CopySettings }
 function CopySettings(Const source, target: TWoWChar): Boolean;
 var
   F: TFilePath;
@@ -84,10 +83,10 @@ var
 begin
   flags := [cffOverwriteFile, cffCreateDestDirectory];
   for F in CollectFilePaths(source, target) do
-    begin
-      ok := FileUtil.CopyFile(F.source, F.target, flags);
-      if not ok then Exit(false);
-    end;
+  begin
+    ok := FileUtil.CopyFile(F.source, F.target, flags);
+    if not ok then Exit(false);
+  end;
   result := true;
 end;
 

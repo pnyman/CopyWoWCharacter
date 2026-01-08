@@ -29,6 +29,7 @@ procedure PrintWoWCharacters(Const A: TWoWCharArray);
 
 implementation
 
+{ * IsValidDir }
 function IsValidDir(Const Info: TRawByteSearchRec): Boolean;
 begin
   Result := ((Info.Attr And faDirectory) <> 0) And
@@ -38,7 +39,7 @@ begin
             (Info.Name <> 'Turtle WoW');
 end;
 
-
+{ * AddWoWCharacter }
 procedure AddWoWCharacter(Var A: TWoWCharArray;
                           Const server, account, realm, name: String);
 var
@@ -53,7 +54,7 @@ begin
   A[High(A)] := C;
 end;
 
-
+{ * FindWoWCharacters }
 function FindWoWCharacters(Const server: String): TWoWCharArray;
 var
   WTF: String;
@@ -70,61 +71,60 @@ begin
 
   // Accounts
   if FindFirst(ConcatPaths([WTF, '*']), faDirectory, info) = 0 then
-    Repeat
-      With info do
-        if IsValidDir(info) then
-          begin
-            account.path := ConcatPaths([WTF, name]);
-            account.name := name;
-            SetLength(accounts, Length(accounts) + 1);
-            accounts[High(accounts)] := account;
-          end;
-    Until FindNext(info) <> 0;
+  Repeat
+    if IsValidDir(info) then
+    begin
+      account.path := ConcatPaths([WTF, info.name]);
+      account.name := info.name;
+      SetLength(accounts, Length(accounts) + 1);
+      accounts[High(accounts)] := account;
+    end;
+  Until FindNext(info) <> 0;
   FindClose(info);
 
   // Realms
   for account in accounts do
-    if FindFirst(ConcatPaths([account.path, '*']), faDirectory, info) = 0 then
-      Repeat
-        With info do
-          if IsValidDir(info) then
-            begin
-              realm.account := account;
-              realm.path := ConcatPaths([account.path, name]);
-              realm.name := name;
-              SetLength(realms, Length(realms) + 1);
-              realms[High(realms)] := realm;
-            end;
-      Until FindNext(info) <> 0;
+  if FindFirst(ConcatPaths([account.path, '*']), faDirectory, info) = 0 then
+  Repeat
+    if IsValidDir(info) then
+    begin
+      realm.account := account;
+      realm.path := ConcatPaths([account.path, info.name]);
+      realm.name := info.name;
+      SetLength(realms, Length(realms) + 1);
+      realms[High(realms)] := realm;
+    end;
+  Until FindNext(info) <> 0;
   FindClose(info);
 
   // Characters
   for realm in realms do
-    if FindFirst(ConcatPaths([realm.path, '*']), faDirectory, info) = 0 then
-      Repeat
-        With info do
-          if IsValidDir(info) then
-            begin
-              AddWoWCharacter(result,
-                              server, realm.account.name, realm.name,
-                              ConcatPaths([realm.path, name]));
-            end;
-      Until FindNext(info) <> 0;
+  if FindFirst(ConcatPaths([realm.path, '*']), faDirectory, info) = 0 then
+  Repeat
+    if IsValidDir(info) then
+    begin
+      AddWoWCharacter(result,
+                      server, realm.account.name, realm.name,
+                      ConcatPaths([realm.path, info.name]));
+    end;
+  Until FindNext(info) <> 0;
   FindClose(info);
 end;
 
-
-{ For testing }
+{ * PrintWoWCharacters }
 procedure PrintWoWCharacters(Const A: TWoWCharArray);
 var
   data: String;
   c: TWoWChar;
+  i: Integer;
 begin
+  i := 0;
   for c in A do
-    begin
-      data := format('%s %s %s %s %s', [c.server, c.account, c.realm, c.name, c.path]);
-      WriteLn(data);
-    end;
+  begin
+    data := format('%2d %-12s %s %s %s %s', [i, c.name, c.server, c.account, c.realm, c.path]);
+    WriteLn(data);
+    inc(i);
+  end;
 end;
 
 end.
