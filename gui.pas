@@ -6,17 +6,17 @@ interface
 
 Uses
 Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, StdCtrls,
-StrUtils,
-Settings;
+ExtCtrls, Settings;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
-    Button1: TButton;
-    Label1: TLabel;
+      Button1: TButton;
+      Button2: TButton;
     Label2: TLabel;
+    Label3: TLabel;
     ListBox1: TListBox;
     ListBox2: TListBox;
     MainMenu1: TMainMenu;
@@ -27,8 +27,13 @@ type
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
     procedure FormShow(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
+    procedure Panel2Click(Sender: TObject);
+    procedure Panel3Click(Sender: TObject);
     procedure SelectWoWDirectory;
     private
       FSettings: Settings.TSettings;
@@ -68,6 +73,16 @@ end;
 procedure TForm1.MenuItem4Click(Sender: TObject);
 begin
   SelectWoWDirectory
+end;
+
+procedure TForm1.Panel2Click(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.Panel3Click(Sender: TObject);
+begin
+
 end;
 
 end.
