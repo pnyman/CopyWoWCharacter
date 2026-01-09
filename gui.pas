@@ -27,13 +27,11 @@ type
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
-    Panel1: TPanel;
-    Panel2: TPanel;
-    Panel3: TPanel;
+    PanelBottom: TPanel;
+    PanelRight: TPanel;
+    PanelLeft: TPanel;
     procedure FormShow(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
-    procedure Panel2Click(Sender: TObject);
-    procedure Panel3Click(Sender: TObject);
     procedure SelectWoWDirectory;
     private
       FSettings: Settings.TSettings;
@@ -50,6 +48,8 @@ implementation
 
 procedure TForm1.FormShow(Sender : TObject);
 begin
+  PanelRight.Width := ClientWidth div 2;
+  PanelLeft.Width := ClientWidth div 2;
   FSettings := Settings.TSettings.Create;
   FWoWDirectory := FSettings.GetWoWDirectory;
   if FWoWDirectory = '' then
@@ -73,16 +73,6 @@ end;
 procedure TForm1.MenuItem4Click(Sender: TObject);
 begin
   SelectWoWDirectory
-end;
-
-procedure TForm1.Panel2Click(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.Panel3Click(Sender: TObject);
-begin
-
 end;
 
 end.

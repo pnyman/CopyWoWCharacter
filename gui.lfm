@@ -2,110 +2,19 @@ object Form1: TForm1
   Left = 463
   Height = 690
   Top = 32
-  Width = 615
+  Width = 816
   Anchors = [akTop, akLeft, akRight]
   Caption = 'Copy WoW Character'
   ChildSizing.LeftRightSpacing = 6
   ChildSizing.TopBottomSpacing = 6
   ChildSizing.HorizontalSpacing = 6
   ClientHeight = 690
-  ClientWidth = 615
+  ClientWidth = 816
   DesignTimePPI = 120
   Font.Height = -15
   Menu = MainMenu1
   OnShow = FormShow
-  object Panel2: TPanel
-    AnchorSideLeft.Control = Panel3
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 310
-    Height = 639
-    Top = 6
-    Width = 299
-    Align = alRight
-    Alignment = taRightJustify
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    AutoSize = True
-    BevelOuter = bvNone
-    Caption = 'Panel2'
-    ChildSizing.VerticalSpacing = 12
-    ClientHeight = 639
-    ClientWidth = 299
-    TabOrder = 0
-    object ListBox1: TListBox
-      AnchorSideLeft.Control = Panel2
-      AnchorSideTop.Control = Label2
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Panel2
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = Panel2
-      AnchorSideBottom.Side = asrBottom
-      Left = 0
-      Height = 599
-      Top = 40
-      Width = 299
-      Anchors = [akTop, akLeft, akRight, akBottom]
-      ItemHeight = 0
-      TabOrder = 0
-    end
-    object Label2: TLabel
-      AnchorSideLeft.Control = Panel2
-      AnchorSideTop.Control = Panel2
-      AnchorSideRight.Control = Panel2
-      AnchorSideRight.Side = asrBottom
-      Left = 0
-      Height = 28
-      Top = 0
-      Width = 299
-      Alignment = taCenter
-      Anchors = [akTop, akLeft, akRight]
-      Caption = 'To:'
-      Font.Height = -20
-      ParentFont = False
-    end
-  end
-  object Panel3: TPanel
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Owner
-    Left = 6
-    Height = 639
-    Top = 6
-    Width = 298
-    Align = alLeft
-    Alignment = taLeftJustify
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    AutoSize = True
-    BevelOuter = bvNone
-    Caption = 'Panel3'
-    ChildSizing.VerticalSpacing = 12
-    ClientHeight = 639
-    ClientWidth = 298
-    TabOrder = 1
-    OnClick = Panel3Click
-    object ListBox2: TListBox
-      AnchorSideBottom.Side = asrBottom
-      Left = 0
-      Height = 599
-      Top = 40
-      Width = 298
-      Align = alClient
-      ItemHeight = 0
-      TabOrder = 0
-    end
-    object Label3: TLabel
-      Left = 0
-      Height = 28
-      Top = 0
-      Width = 298
-      Align = alTop
-      Alignment = taCenter
-      Caption = 'From:'
-      Font.Height = -20
-      ParentFont = False
-    end
-  end
-  object Panel1: TPanel
+  object PanelBottom: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
@@ -114,15 +23,16 @@ object Form1: TForm1
     Left = 6
     Height = 39
     Top = 645
-    Width = 603
+    Width = 804
     Align = alBottom
+    BorderSpacing.Top = 6
     BevelOuter = bvNone
     ChildSizing.VerticalSpacing = 6
     ClientHeight = 39
-    ClientWidth = 603
-    TabOrder = 2
+    ClientWidth = 804
+    TabOrder = 0
     object Button1: TButton
-      Left = 509
+      Left = 710
       Height = 39
       Top = 0
       Width = 94
@@ -131,13 +41,99 @@ object Form1: TForm1
       TabOrder = 0
     end
     object Button2: TButton
-      Left = 415
+      Left = 616
       Height = 39
       Top = 0
       Width = 94
       Align = alRight
       Caption = 'Cancel'
       TabOrder = 1
+    end
+  end
+  object PanelLeft: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideBottom.Control = PanelBottom
+    Left = 6
+    Height = 633
+    Top = 6
+    Width = 250
+    Align = alLeft
+    Alignment = taLeftJustify
+    Anchors = [akLeft, akBottom]
+    BevelOuter = bvNone
+    ChildSizing.VerticalSpacing = 12
+    ClientHeight = 633
+    ClientWidth = 250
+    TabOrder = 1
+    object ListBox2: TListBox
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 593
+      Top = 40
+      Width = 250
+      Align = alClient
+      ItemHeight = 0
+      TabOrder = 0
+    end
+    object Label3: TLabel
+      Left = 0
+      Height = 28
+      Top = 0
+      Width = 250
+      Align = alTop
+      Alignment = taCenter
+      Caption = 'From:'
+      Font.Height = -20
+      ParentFont = False
+    end
+  end
+  object PanelRight: TPanel
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = PanelBottom
+    Left = 560
+    Height = 633
+    Top = 6
+    Width = 250
+    Align = alRight
+    Alignment = taRightJustify
+    BevelOuter = bvNone
+    ChildSizing.VerticalSpacing = 12
+    ClientHeight = 633
+    ClientWidth = 250
+    TabOrder = 2
+    object ListBox1: TListBox
+      AnchorSideLeft.Control = PanelRight
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = PanelRight
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = PanelRight
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 593
+      Top = 40
+      Width = 250
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      ItemHeight = 0
+      TabOrder = 0
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = PanelRight
+      AnchorSideTop.Control = PanelRight
+      AnchorSideRight.Control = PanelRight
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 28
+      Top = 0
+      Width = 250
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      Caption = 'To:'
+      Font.Height = -20
+      ParentFont = False
     end
   end
   object MainMenu1: TMainMenu
