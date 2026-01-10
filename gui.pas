@@ -6,15 +6,15 @@ interface
 
 Uses
 Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, StdCtrls,
-ExtCtrls, ComCtrls, LCLType, Settings, CharData;
+ExtCtrls, ComCtrls, LCLType, Buttons, Settings, CharData;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
-    ButtonOK: TButton;
-    ButtonCancel: TButton;
+    ButtonCancel: TBitBtn;
+    ButtonOK: TBitBtn;
     Label2: TLabel;
     Label3: TLabel;
     ListViewRight: TListView;
@@ -76,23 +76,23 @@ var
   WCharFrom, WCharTo: TWoWChar;
 begin
   for i := 0 to ListViewLeft.Items.Count - 1 do
-  if ListViewLeft.Items[i].Selected then
-  begin
-    WCharFrom := FWoWCharArray[i];
-    break;
-  end;
+    if ListViewLeft.Items[i].Selected then
+      begin
+        WCharFrom := FWoWCharArray[i];
+        break;
+      end;
 
   for i := 0 to ListViewRight.Items.Count - 1 do
-  if ListViewRight.Items[i].Selected then
-  begin
-    WCharTo := FWoWCharArray[i];
-    break;
-  end;
+    if ListViewRight.Items[i].Selected then
+      begin
+        WCharTo := FWoWCharArray[i];
+        break;
+      end;
 
   if WCharFrom.path = WCharTo.path then
-  WarningDialog
+    WarningDialog
   else
-  ConfirmDialog(WCharFrom, WCharTo);
+    ConfirmDialog(WCharFrom, WCharTo);
 end;
 
 procedure TForm1.WarningDialog;
@@ -106,9 +106,9 @@ var
   msg: String;
 begin
   BoxStyle := MB_ICONQUESTION + MB_YESNO;
-  msg := format('Do you want to copy%s%s (%s) to %s (%s)?',
-                [sLineBreak, WCharFrom.name, WCharFrom.realm,
-                 WCharTo.name, WCharTo.realm]);
+  msg := format('Do you want to copy settings from%s%s (%s) to %s (%s)?',
+         [sLineBreak, WCharFrom.name, WCharFrom.realm,
+         WCharTo.name, WCharTo.realm]);
   Reply := Application.MessageBox(PChar(msg), 'Confirmation', BoxStyle);
 end;
 
@@ -119,11 +119,11 @@ var
 begin
   selection := SelectDirectory('Wow directory', GetUserDir, directory);
   if selection then
-  begin
-    FWoWDirectory := directory;
-    FSettings.SetWoWDirectory(FWoWDirectory);
-    FSettings.SaveJSON;
-  end;
+    begin
+      FWoWDirectory := directory;
+      FSettings.SetWoWDirectory(FWoWDirectory);
+      FSettings.SaveJSON;
+    end;
 end;
 
 procedure TForm1.PopulateListBoxes;
@@ -133,20 +133,20 @@ var
   account: String;
 begin
   for C in FWoWCharArray do
-  begin
-    account := LowerCase(c.account);
-    account[1] := UpCase(account[1]);
+    begin
+      account := LowerCase(c.account);
+      account[1] := UpCase(account[1]);
 
-    ItemLeft := ListViewLeft.Items.Add;
-    ItemLeft.Caption := c.name;
-    ItemLeft.SubItems.Add(account);
-    ItemLeft.SubItems.Add(c.realm);
+      ItemLeft := ListViewLeft.Items.Add;
+      ItemLeft.Caption := c.name;
+      ItemLeft.SubItems.Add(account);
+      ItemLeft.SubItems.Add(c.realm);
 
-    ItemRight := ListViewRight.Items.Add;
-    ItemRight.Caption := c.name;
-    ItemRight.SubItems.Add(account);
-    ItemRight.SubItems.Add(c.realm);
-  end;
+      ItemRight := ListViewRight.Items.Add;
+      ItemRight.Caption := c.name;
+      ItemRight.SubItems.Add(account);
+      ItemRight.SubItems.Add(c.realm);
+    end;
 end;
 
 procedure TForm1.MenuItem4Click(Sender: TObject);
