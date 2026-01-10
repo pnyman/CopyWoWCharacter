@@ -6,7 +6,7 @@ interface
 
 Uses
 Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, StdCtrls,
-ExtCtrls, ComCtrls, Settings, CharData;
+ExtCtrls, ComCtrls, LCLType, Settings, CharData;
 
 type
 
@@ -36,6 +36,8 @@ type
     procedure MenuItem4Click(Sender: TObject);
     procedure SelectWoWDirectory;
     procedure PopulateListBoxes;
+    procedure WarningDialog;
+    procedure ConfirmDialog(WCharFrom, WCharTo: TWoWChar);
     private
       FSettings: Settings.TSettings;
       FWoWDirectory: String;
@@ -71,23 +73,43 @@ end;
 procedure TForm1.ButtonOKClick(Sender: TObject);
 var
   i: Integer;
-  p, q: Integer;
+  WCharFrom, WCharTo: TWoWChar;
 begin
   for i := 0 to ListViewLeft.Items.Count - 1 do
   if ListViewLeft.Items[i].Selected then
   begin
-    p := i;
+    WCharFrom := FWoWCharArray[i];
     break;
   end;
 
   for i := 0 to ListViewRight.Items.Count - 1 do
   if ListViewRight.Items[i].Selected then
   begin
-    q := i;
+    WCharTo := FWoWCharArray[i];
     break;
   end;
 
-  ShowMessage(format('%s -> %s', [FWoWCharArray[p].name, FWoWCharArray[q].name]));
+  if WCharFrom.path = WCharTo.path then
+  WarningDialog
+  else
+  ConfirmDialog(WCharFrom, WCharTo);
+end;
+
+procedure TForm1.WarningDialog;
+begin
+  Application.MessageBox('Cannot copy a char to itself!', 'Error', MB_ICONERROR);
+end;
+
+procedure TForm1.ConfirmDialog(WCharFrom, WCharTo: TWoWChar);
+var
+  Reply, BoxStyle: Integer;
+  msg: String;
+begin
+  BoxStyle := MB_ICONQUESTION + MB_YESNO;
+  msg := format('Do you want to copy%s%s (%s) to %s (%s)?',
+                [sLineBreak, WCharFrom.name, WCharFrom.realm,
+                 WCharTo.name, WCharTo.realm]);
+  Reply := Application.MessageBox(PChar(msg), 'Confirmation', BoxStyle);
 end;
 
 procedure TForm1.SelectWoWDirectory;
@@ -108,17 +130,21 @@ procedure TForm1.PopulateListBoxes;
 var
   C: TWoWChar;
   ItemLeft, ItemRight: TListItem;
+  account: String;
 begin
   for C in FWoWCharArray do
   begin
+    account := LowerCase(c.account);
+    account[1] := UpCase(account[1]);
+
     ItemLeft := ListViewLeft.Items.Add;
     ItemLeft.Caption := c.name;
-    ItemLeft.SubItems.Add(c.account);
+    ItemLeft.SubItems.Add(account);
     ItemLeft.SubItems.Add(c.realm);
 
     ItemRight := ListViewRight.Items.Add;
     ItemRight.Caption := c.name;
-    ItemRight.SubItems.Add(c.account);
+    ItemRight.SubItems.Add(account);
     ItemRight.SubItems.Add(c.realm);
   end;
 end;
