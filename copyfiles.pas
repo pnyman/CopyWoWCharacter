@@ -4,90 +4,119 @@ unit CopyFiles;
 
 interface
 
-Uses
-Classes, SysUtils, FileUtil, CharData;
-{ add flag -FuC:\lazarus\components\lazutils when testing }
+uses
+  Classes, SysUtils, FileUtil, Zipper, CharData;
+  { add flag -FuC:\lazarus\components\lazutils when testing }
 
 type
-  TFilePath = Record
-    source, target: String
+  TFilePath = record
+    Source, target: string
   end;
 
-  TFilePathsArray = Array of TFilePath;
+  TFilePathsArray = array of TFilePath;
 
-function CollectFilePaths(Const source, target: TWoWChar): TFilePathsArray;
-function CopyCharSettings(Const source, target: TWoWChar): Boolean;
+function CollectFilePaths(const Source, target: TWoWChar): TFilePathsArray;
+function CopyCharSettings(const Source, target: TWoWChar): boolean;
+procedure MakeZipBackup(const WChar: TWoWChar);
 
 implementation
 
 { * WantItem }
-function WantItem(Const Info: TRawByteSearchRec): Boolean;
+
+function WantItem(const Info: TRawByteSearchRec): boolean;
 begin
-  Result := (Info.Name <> '.') And
-            (Info.Name <> '..') And
-            (Info.Name <> 'cache.md5');
+  Result := (Info.Name <> '.') and (Info.Name <> '..') and
+    (Info.Name <> 'cache.md5');
 end;
 
 { * AddPath }
-procedure AddPath(Var A: TFilePathsArray; Const source, target: Array Of String);
+
+procedure AddPath(var A: TFilePathsArray; const Source, target: array of string);
 var
   path: TFilePath;
 begin
-  path.source := ConcatPaths(source);
+  path.Source := ConcatPaths(Source);
   path.target := ConcatPaths(target);
   SetLength(A, Length(A) + 1);
   A[High(A)] := path;
 end;
 
 { * CollectFilePaths }
-function CollectFilePaths(Const source, target: TWoWChar): TFilePathsArray;
+
+function CollectFilePaths(const Source, target: TWoWChar): TFilePathsArray;
 var
   info1, info2: TRawByteSearchRec;
-  OuterPath, InnerPath: String;
+  OuterPath, InnerPath: string;
   A: TFilePathsArray = nil;
 begin
-  OuterPath := ConcatPaths(ConcatPaths([source.path, '*']));
+  OuterPath := ConcatPaths(ConcatPaths([Source.path, '*']));
 
   if FindFirst(OuterPath, faDirectory, info1) = 0 then
-  Repeat
-    begin
-      if not WantItem(info1) then continue;
-
-      // Directory
-      if ((info1.Attr and faDirectory) = faDirectory) then
+    repeat
       begin
-        InnerPath := ConcatPaths([source.path, info1.name, '*']);
-        if FindFirst(InnerPath, faDirectory, info2) = 0 then
-        Repeat
-          if WantItem(info2) then
-          AddPath(A, [source.path, info1.name, info2.name], [target.path, info1.name, info2.name]);
-        Until FindNext(info2) <> 0;
-        FindClose(info2);
-      end
+        if not WantItem(info1) then continue;
 
-      // Non-directory
-      else AddPath(A, [source.path, info1.name], [target.path, info1.name]);
-    end;
+        // Directory
+        if ((info1.Attr and faDirectory) = faDirectory) then
+        begin
+          InnerPath := ConcatPaths([Source.path, info1.Name, '*']);
+          if FindFirst(InnerPath, faDirectory, info2) = 0 then
+            repeat
+              if WantItem(info2) then
+                AddPath(A, [Source.path, info1.Name, info2.Name],
+                  [target.path, info1.Name, info2.Name]);
+            until FindNext(info2) <> 0;
+          FindClose(info2);
+        end
 
-  Until FindNext(info1) <> 0;
+        // Non-directory
+        else
+          AddPath(A, [Source.path, info1.Name], [target.path, info1.Name]);
+      end;
+
+    until FindNext(info1) <> 0;
   FindClose(info1);
-  result := A;
+  Result := A;
 end;
 
 { * CopyCharSettings }
-function CopyCharSettings(Const source, target: TWoWChar): Boolean;
+
+function CopyCharSettings(const Source, target: TWoWChar): boolean;
 var
   F: TFilePath;
-  ok: Boolean;
+  ok: boolean;
   flags: TCopyFileFlags;
 begin
+  MakeZipBackup(target);
   flags := [cffOverwriteFile, cffCreateDestDirectory];
-  for F in CollectFilePaths(source, target) do
+  for F in CollectFilePaths(Source, target) do
   begin
-    ok := FileUtil.CopyFile(F.source, F.target, flags);
-    if not ok then Exit(false);
+    ok := FileUtil.CopyFile(F.Source, F.target, flags);
+    if not ok then Exit(False);
   end;
-  result := true;
+  Result := True;
+end;
+
+{ * MakeZipBackup }
+
+procedure MakeZipBackup(const WChar: TWoWChar);
+var
+  AZipper: TZipper;
+  TheFileList: TStringList;
+  directory: string;
+begin
+  directory := WChar.path;
+  AZipper := TZipper.Create;
+  AZipper.Filename := ConcatPaths([directory, 'settingsbackup.zip']);
+  TheFileList := TStringList.Create;
+  try
+    FindAllFiles(TheFileList, directory);
+    AZipper.Entries.AddFileEntries(TheFileList);
+    AZipper.ZipAllFiles;
+  finally
+    TheFileList.Free;
+    AZipper.Free;
+  end;
 end;
 
 end.
