@@ -16,7 +16,7 @@ type
   TFilePathsArray = Array of TFilePath;
 
 function CollectFilePaths(Const source, target: TWoWChar): TFilePathsArray;
-function CopySettings(Const source, target: TWoWChar): Boolean;
+function CopyCharSettings(Const source, target: TWoWChar): Boolean;
 
 implementation
 
@@ -74,8 +74,8 @@ begin
   result := A;
 end;
 
-{ * CopySettings }
-function CopySettings(Const source, target: TWoWChar): Boolean;
+{ * CopyCharSettings }
+function CopyCharSettings(Const source, target: TWoWChar): Boolean;
 var
   F: TFilePath;
   ok: Boolean;

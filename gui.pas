@@ -6,7 +6,7 @@ interface
 
 Uses
 Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, StdCtrls,
-ExtCtrls, ComCtrls, LCLType, Buttons, Settings, CharData;
+ExtCtrls, ComCtrls, LCLType, Buttons, Settings, CharData, CopyFiles;
 
 type
 
@@ -36,7 +36,8 @@ type
     procedure MenuItem4Click(Sender: TObject);
     procedure SelectWoWDirectory;
     procedure PopulateListBoxes;
-    procedure WarningDialog;
+    procedure WarningDialog(msg: String);
+    procedure InfoDialog(msg: String);
     procedure ConfirmDialog(WCharFrom, WCharTo: TWoWChar);
     private
       FSettings: Settings.TSettings;
@@ -74,11 +75,14 @@ procedure TForm1.ButtonOKClick(Sender: TObject);
 var
   i: Integer;
   WCharFrom, WCharTo: TWoWChar;
+  FromSelected: Boolean = false;
+  ToSelected: Boolean = false;
 begin
   for i := 0 to ListViewLeft.Items.Count - 1 do
     if ListViewLeft.Items[i].Selected then
       begin
         WCharFrom := FWoWCharArray[i];
+        FromSelected := true;
         break;
       end;
 
@@ -86,30 +90,48 @@ begin
     if ListViewRight.Items[i].Selected then
       begin
         WCharTo := FWoWCharArray[i];
+        ToSelected := true;
         break;
       end;
 
-  if WCharFrom.path = WCharTo.path then
-    WarningDialog
+  if not FromSelected or not ToSelected then
+    WarningDialog('Character selection misssing.')
+  else
+    if WCharFrom.path = WCharTo.path then
+      WarningDialog('Cannot copy character to itself!')
   else
     ConfirmDialog(WCharFrom, WCharTo);
 end;
 
-procedure TForm1.WarningDialog;
+procedure TForm1.WarningDialog(msg: String);
 begin
-  Application.MessageBox('Cannot copy a char to itself!', 'Error', MB_ICONERROR);
+  Application.MessageBox(PChar(msg), 'Error', MB_ICONERROR);
+end;
+
+procedure TForm1.InfoDialog(msg: String);
+begin
+  Application.MessageBox(PChar(msg), 'Info', MB_ICONINFORMATION);
 end;
 
 procedure TForm1.ConfirmDialog(WCharFrom, WCharTo: TWoWChar);
 var
   Reply, BoxStyle: Integer;
   msg: String;
+  OK: boolean;
 begin
   BoxStyle := MB_ICONQUESTION + MB_YESNO;
   msg := format('Do you want to copy settings from%s%s (%s) to %s (%s)?',
          [sLineBreak, WCharFrom.name, WCharFrom.realm,
          WCharTo.name, WCharTo.realm]);
   Reply := Application.MessageBox(PChar(msg), 'Confirmation', BoxStyle);
+
+  if Reply = IDYES then
+    OK := CopyFiles.CopyCharSettings(WCharFrom, WCharTo);
+
+  if OK then
+    InfoDialog('The settings were copied.')
+  else
+    WarningDialog('Could not copy settings.');
 end;
 
 procedure TForm1.SelectWoWDirectory;
