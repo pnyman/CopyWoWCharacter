@@ -1,0 +1,34 @@
+object ReadMeForm: TReadMeForm
+  Left = 2650
+  Height = 500
+  Top = 32
+  Width = 700
+  BorderStyle = bsDialog
+  Caption = 'README'
+  ClientHeight = 500
+  ClientWidth = 700
+  DesignTimePPI = 120
+  Position = poScreenCenter
+  LCLVersion = '4.0.0.4'
+  object IpHtmlPanel1: TIpHtmlPanel
+    Left = 8
+    Height = 484
+    Top = 8
+    Width = 684
+    Align = alClient
+    BorderSpacing.Around = 8
+    FixedTypeface = 'Courier New'
+    DefaultTypeFace = 'default'
+    DefaultFontSize = 12
+    FlagErrors = False
+    PrintSettings.MarginLeft = 0.5
+    PrintSettings.MarginTop = 0.5
+    PrintSettings.MarginRight = 0.5
+    PrintSettings.MarginBottom = 0.5
+    PrintSettings.Preview.Left = 480
+    PrintSettings.Preview.Top = 270
+    PrintSettings.Preview.Width = 1440
+    PrintSettings.Preview.Height = 810
+    TabOrder = 0
+  end
+end

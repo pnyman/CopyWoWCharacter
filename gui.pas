@@ -6,27 +6,27 @@ interface
 
 Uses
 Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, StdCtrls,
-ExtCtrls, ComCtrls, LCLType, Buttons, Settings, CharData, CopyFiles;
+ExtCtrls, ComCtrls, LCLType, Buttons, Settings, CharData, CopyFiles,
+ReadMeForm;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
-    ButtonCancel: TBitBtn;
     ButtonOK: TBitBtn;
     Label2: TLabel;
     Label3: TLabel;
     ListViewRight: TListView;
     ListViewLeft: TListView;
     MainMenu1: TMainMenu;
-    MenuItem1: TMenuItem;
-    MenuItem2: TMenuItem;
+    MenuItemFile: TMenuItem;
+    MenuItemQuit: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
-    MenuItem5: TMenuItem;
-    MenuItem6: TMenuItem;
-    MenuItem7: TMenuItem;
+    MenuItemHelp: TMenuItem;
+    MenuItemAbout: TMenuItem;
+    MenuItemReadme: TMenuItem;
     PanelBottom: TPanel;
     PanelRight: TPanel;
     PanelLeft: TPanel;
@@ -34,6 +34,9 @@ type
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
+    procedure MenuItemAboutClick(Sender: TObject);
+    procedure MenuItemQuitClick(Sender: TObject);
+    procedure MenuItemReadmeClick(Sender: TObject);
     procedure SelectWoWDirectory;
     procedure PopulateListBoxes;
     procedure WarningDialog(msg: String);
@@ -55,6 +58,10 @@ implementation
 
 procedure TForm1.FormShow(Sender : TObject);
 begin
+  Width := 800;
+  Height := 500;
+  Position := poScreenCenter;
+
   FSettings := Settings.TSettings.Create;
   FWoWDirectory := FSettings.GetWoWDirectory;
   if FWoWDirectory = '' then SelectWoWDirectory;
@@ -173,7 +180,30 @@ end;
 
 procedure TForm1.MenuItem4Click(Sender: TObject);
 begin
-  SelectWoWDirectory
+  SelectWoWDirectory;
+end;
+
+procedure TForm1.MenuItemAboutClick(Sender: TObject);
+begin
+  ShowMessage('CopyWoWChar v0.1');
+end;
+
+procedure TForm1.MenuItemQuitClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TForm1.MenuItemReadmeClick(Sender: TObject);
+var
+  F: TReadmeForm;
+begin
+  F := TReadmeForm.Create(Self);
+  try
+    F.ShowMarkdownFile('README.md');
+    F.ShowModal;
+  finally
+    F.Free;
+  end;
 end;
 
 end.

@@ -26,6 +26,9 @@
     </RunParams>
     <RequiredPackages>
       <Item>
+        <PackageName Value="TurboPowerIPro"/>
+      </Item>
+      <Item>
         <PackageName Value="LCL"/>
       </Item>
     </RequiredPackages>
@@ -56,6 +59,14 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="CopyFiles"/>
       </Unit>
+      <Unit>
+        <Filename Value="readmeform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form2"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ReadmeForm"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -66,6 +77,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
+      <OtherUnitFiles Value="lib\fpc-markdown\source"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
