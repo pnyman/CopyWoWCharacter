@@ -13,7 +13,7 @@ type
   { TReadMeForm }
 
   TReadMeForm = class(TForm)
-    IpHtmlPanel1: TIpHtmlPanel;
+    HtmlPanel: TIpHtmlPanel;
   private
 
   public
@@ -43,7 +43,7 @@ begin
     HTML := Processor.Process(MD.Text);
     fs := TStringStream.Create(HTML);
     Doc.LoadFromStream(fs);
-    IpHtmlPanel1.SetHtml(Doc);
+    HtmlPanel.SetHtml(Doc);
   finally
     MD.Free;
     Processor.Free;
