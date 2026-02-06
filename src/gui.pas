@@ -146,7 +146,7 @@ var
   directory: String;
   selection: Boolean;
 begin
-  selection := SelectDirectory('Wow directory', GetUserDir, directory);
+  selection := SelectDirectory('WoW directory', GetUserDir, directory);
   if selection then
     begin
       FWoWDirectory := directory;
