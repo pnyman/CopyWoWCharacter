@@ -30,6 +30,7 @@ procedure PrintWoWCharacters(Const A: TWoWCharArray);
 implementation
 
 { * IsValidDir }
+
 function IsValidDir(Const Info: TRawByteSearchRec): Boolean;
 begin
   Result := ((Info.Attr And faDirectory) <> 0) And
@@ -40,6 +41,7 @@ begin
 end;
 
 { * AddWoWCharacter }
+
 procedure AddWoWCharacter(Var A: TWoWCharArray;
                           Const server, account, realm, name: String);
 var
@@ -55,6 +57,7 @@ begin
 end;
 
 { * FindWoWCharacters }
+
 function FindWoWCharacters(Const server: String): TWoWCharArray;
 var
   WTF: String;
@@ -102,16 +105,15 @@ begin
   if FindFirst(ConcatPaths([realm.path, '*']), faDirectory, info) = 0 then
   Repeat
     if IsValidDir(info) then
-    begin
       AddWoWCharacter(result,
                       server, realm.account.name, realm.name,
                       ConcatPaths([realm.path, info.name]));
-    end;
   Until FindNext(info) <> 0;
   FindClose(info);
 end;
 
 { * PrintWoWCharacters }
+
 procedure PrintWoWCharacters(Const A: TWoWCharArray);
 var
   data: String;
