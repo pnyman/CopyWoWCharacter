@@ -10,8 +10,11 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, gui, Settings, CharData, CopyFiles, ReadmeForm
-  { you can add units after this };
+  Forms, gui, Settings, CharData, CopyFiles, ReadmeForm,
+  uDarkStyleParams,
+  uDarkStyleSchemes,
+  uMetaDarkStyle
+{ you can add units after this };
 
 {$R *.res}
 
@@ -21,6 +24,8 @@ begin
   {$PUSH}{$WARN 5044 OFF}
   Application.MainFormOnTaskbar:=True;
   {$POP}
+  PreferredAppMode := pamForceDark;
+  uMetaDarkStyle.ApplyMetaDarkStyle(DefaultDark);
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.Run;
