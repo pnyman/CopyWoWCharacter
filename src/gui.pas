@@ -127,9 +127,9 @@ var
   OK: boolean;
 begin
   BoxStyle := MB_ICONQUESTION + MB_YESNO;
-  msg := format('Do you want to copy settings from%s%s (%s) to %s (%s)?',
+  msg := format('Do you want to copy settings %sfrom: %s (%s) %sto: %s (%s)?',
          [sLineBreak, WCharFrom.name, WCharFrom.realm,
-         WCharTo.name, WCharTo.realm]);
+         sLineBreak, WCharTo.name, WCharTo.realm]);
   Reply := Application.MessageBox(PChar(msg), 'Confirmation', BoxStyle);
 
   if Reply = IDYES then
@@ -138,7 +138,7 @@ begin
   if OK then
     InfoDialog('The settings were copied.')
   else
-    WarningDialog('Could not copy settings.');
+    WarningDialog('Operation aborted by user.');
 end;
 
 procedure TForm1.SelectWoWDirectory;
