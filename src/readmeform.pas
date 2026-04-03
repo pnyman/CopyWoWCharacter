@@ -50,6 +50,8 @@ begin
     fs := TStringStream.Create(HTML);
     Doc.LoadFromStream(fs);
     HtmlPanel.SetHtml(Doc);
+    HtmlPanel.BgColor := RGBToColor(30, 30, 30);
+    HtmlPanel.DefaultTypeFace := 'Segoe UI';
   finally
     MD.Free;
     Processor.Free;
