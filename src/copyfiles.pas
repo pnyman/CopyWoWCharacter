@@ -103,15 +103,22 @@ procedure MakeZipBackup(const WChar: TWoWChar);
 var
   AZipper: TZipper;
   TheFileList: TStringList;
-  directory: string;
+  directory, ZipPath, FileName: string;
 begin
   directory := WChar.path;
+  ZipPath := ConcatPaths([directory, 'settingsbackup.zip']);
+
+  if FileExists(ZipPath) then
+    DeleteFile(ZipPath);
+
   AZipper := TZipper.Create;
-  AZipper.Filename := ConcatPaths([directory, 'settingsbackup.zip']);
+  AZipper.Filename := ZipPath;
   TheFileList := TStringList.Create;
+
   try
     FindAllFiles(TheFileList, directory);
-    AZipper.Entries.AddFileEntries(TheFileList);
+    for FileName in TheFileList do
+      AZipper.Entries.AddFileEntry(FileName, ExtractRelativePath(directory, FileName));
     AZipper.ZipAllFiles;
   finally
     TheFileList.Free;
