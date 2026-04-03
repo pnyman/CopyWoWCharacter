@@ -74,41 +74,41 @@ begin
 
   // Accounts
   if FindFirst(ConcatPaths([WTF, '*']), faDirectory, info) = 0 then
-  Repeat
-    if IsValidDir(info) then
-    begin
-      account.path := ConcatPaths([WTF, info.name]);
-      account.name := info.name;
-      SetLength(accounts, Length(accounts) + 1);
-      accounts[High(accounts)] := account;
-    end;
-  Until FindNext(info) <> 0;
+    Repeat
+      if IsValidDir(info) then
+        begin
+          account.path := ConcatPaths([WTF, info.name]);
+          account.name := info.name;
+          SetLength(accounts, Length(accounts) + 1);
+          accounts[High(accounts)] := account;
+        end;
+    Until FindNext(info) <> 0;
   FindClose(info);
 
   // Realms
   for account in accounts do
-  if FindFirst(ConcatPaths([account.path, '*']), faDirectory, info) = 0 then
-  Repeat
-    if IsValidDir(info) then
-    begin
-      realm.account := account;
-      realm.path := ConcatPaths([account.path, info.name]);
-      realm.name := info.name;
-      SetLength(realms, Length(realms) + 1);
-      realms[High(realms)] := realm;
-    end;
-  Until FindNext(info) <> 0;
+    if FindFirst(ConcatPaths([account.path, '*']), faDirectory, info) = 0 then
+      Repeat
+        if IsValidDir(info) then
+          begin
+            realm.account := account;
+            realm.path := ConcatPaths([account.path, info.name]);
+            realm.name := info.name;
+            SetLength(realms, Length(realms) + 1);
+            realms[High(realms)] := realm;
+          end;
+      Until FindNext(info) <> 0;
   FindClose(info);
 
   // Characters
   for realm in realms do
-  if FindFirst(ConcatPaths([realm.path, '*']), faDirectory, info) = 0 then
-  Repeat
-    if IsValidDir(info) then
-      AddWoWCharacter(result,
-                      server, realm.account.name, realm.name,
-                      ConcatPaths([realm.path, info.name]));
-  Until FindNext(info) <> 0;
+    if FindFirst(ConcatPaths([realm.path, '*']), faDirectory, info) = 0 then
+      Repeat
+        if IsValidDir(info) then
+          AddWoWCharacter(result,
+                          server, realm.account.name, realm.name,
+                          ConcatPaths([realm.path, info.name]));
+      Until FindNext(info) <> 0;
   FindClose(info);
 end;
 
@@ -122,11 +122,11 @@ var
 begin
   i := 0;
   for c in A do
-  begin
-    data := format('%2d %-12s %s %s %s %s', [i, c.name, c.server, c.account, c.realm, c.path]);
-    WriteLn(data);
-    inc(i);
-  end;
+    begin
+      data := format('%2d %-12s %s %s %s %s', [i, c.name, c.server, c.account, c.realm, c.path]);
+      WriteLn(data);
+      inc(i);
+    end;
 end;
 
 end.
