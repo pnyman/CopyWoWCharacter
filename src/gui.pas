@@ -34,8 +34,8 @@ type
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
-    procedure MenuItemAboutClick(Sender: TObject);
     procedure MenuItemQuitClick(Sender: TObject);
+    procedure MenuItemAboutClick(Sender: TObject);
     procedure MenuItemReadmeClick(Sender: TObject);
     procedure SelectWoWDirectory;
     procedure PopulateListBoxes;
@@ -188,11 +188,6 @@ begin
   ShowMessage('CopyWoWChar v0.1');
 end;
 
-procedure TForm1.MenuItemQuitClick(Sender: TObject);
-begin
-  Close;
-end;
-
 procedure TForm1.MenuItemReadmeClick(Sender: TObject);
 var
   F: TReadmeForm;
@@ -205,5 +200,12 @@ begin
     F.Free;
   end;
 end;
+
+
+procedure TForm1.MenuItemQuitClick(Sender: TObject);
+begin
+  Close;
+end;
+
 
 end.
