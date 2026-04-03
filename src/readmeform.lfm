@@ -9,8 +9,9 @@ object ReadMeForm: TReadMeForm
   ClientWidth = 700
   DesignTimePPI = 120
   Position = poScreenCenter
+  OnShow = FormShow
   LCLVersion = '4.0.0.4'
-  object IpHtmlPanel1: TIpHtmlPanel
+  object HtmlPanel: TIpHtmlPanel
     Left = 8
     Height = 484
     Top = 8
