@@ -102,7 +102,7 @@ begin
       end;
 
   if not FromSelected or not ToSelected then
-    WarningDialog('Character selection misssing.')
+    WarningDialog('Character selection missing.')
   else
     if WCharFrom.path = WCharTo.path then
       WarningDialog('Cannot copy character to itself!')
